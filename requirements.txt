@@ -1,0 +1,9 @@
+duckdb
+pandas
+pyarrow
+numpy
+scipy
+statsmodels
+matplotlib
+requests
+ipykernel
