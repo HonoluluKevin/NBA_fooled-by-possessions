@@ -23,3 +23,17 @@ def file_name(table: str, season: int, season_type: str = SEASON_TYPE) -> str:
 
 def file_url(table: str, season: int, season_type: str = SEASON_TYPE) -> str:
     return f"{BASE_URL}/{table}/{file_name(table, season, season_type)}"
+
+# Possession windows: possessions per window, both teams combined (10 = ~5 each)
+WINDOW_SIZES = [2, 4, 6, 10, 20, 30, 50, 100]
+
+# Outputs of the transform step
+TEAM_SEASON_CSV = PROCESSED_DIR / "team_season.csv"                 # one row per team-season (wide)
+TEAM_SEASON_LEVELS_CSV = PROCESSED_DIR / "team_season_levels.csv"   # one row per team-season-level (long)
+
+# Phase 4 (MVP): probability of winning at different possession scales
+BEST_RECORD_SEASONS = [2022, 2023, 2024, 2025, 2026]   # team with the best record in each
+EXTRA_TEAM_SEASONS = [("GSW", 2016)]                   # plus the 2016-17 Warriors (67-15)
+SCALE_WINDOW_SIZES = [30, 20, 10, 6, 4, 2]             # possession rows, after game/half/quarter
+SIGMA_WINDOW_SIZE = 10                                 # window size used to measure sigma
+RESULTS_DIR = ROOT / "results"                         # small outputs, committed to Git

@@ -1,7 +1,6 @@
 """Phase 2b: run sanity checks on the raw files and save a per-season report."""
-import duckdb
-
 from src import config
+from src.db import connect
 
 # Regular-season games per season; short seasons are expected, anything else is a red flag
 EXPECTED_GAMES = {
@@ -11,15 +10,6 @@ EXPECTED_GAMES = {
     2021: 1080,   # 2020-21: 72 games per team
 }
 DEFAULT_GAMES = 1230
-
-
-def connect():
-    """In-memory DuckDB connection with one view per raw table (all seasons stacked)."""
-    con = duckdb.connect()
-    for table in config.TABLES:
-        files = (config.RAW_DIR / f"{table}_{config.SEASON_TYPE}_*.parquet").as_posix()
-        con.execute(f"CREATE VIEW {table} AS SELECT * FROM read_parquet('{files}')")
-    return con
 
 
 def run_validation():
@@ -32,6 +22,7 @@ def run_validation():
         (report["games"] == report["expected_games"])
         & (report["games_missing_quarter_ends"] == 0)
         & (report["games_missing_possessions"] == 0)
+        & (report["games_possessions_out_of_order"] == 0)
     )
 
     out = config.PROCESSED_DIR / "validation_report.csv"

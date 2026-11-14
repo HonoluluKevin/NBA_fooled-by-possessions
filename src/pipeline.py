@@ -1,6 +1,8 @@
 """Runs the whole project in order. From the project folder:  python -m src.pipeline"""
 from src import config
 from src.download import download_all
+from src.scaling_law_table import run_scales
+from src.transform import run_transform
 from src.validate import run_validation
 
 
@@ -9,17 +11,20 @@ def download():
     print("[download]")
     download_all()
 
-
 def validate():
     """Phase 2: sanity checks (games per season, possession points vs. final score)."""
     print("\n[validate]")
     run_validation()
 
-
 def transform():
     """Phase 3: run the SQL in sql/ to build windows and team-season tables."""
-    print(f"\n[transform] TODO: SQL files in {config.SQL_DIR}")
+    print("\n[transform]")
+    run_transform()
 
+def analyze():
+    """Phase 4: the probability-at-different-scales table, saved to results/."""
+    print("\n[analyze]")
+    run_scales()
 
 def main():
     for folder in (config.RAW_DIR, config.PROCESSED_DIR, config.FIGURES_DIR):
@@ -27,6 +32,7 @@ def main():
     download()
     validate()
     transform()
+    analyze()
     print("\nPipeline finished.")
 
 
